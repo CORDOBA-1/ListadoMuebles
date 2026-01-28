@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Muebles Euro - Listado de Precios</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <div class="brand">
+        <div>
+          <div class="brand-title">Muebles Euro</div>
+          <div class="brand-subtitle">Lista de precios mayorista</div>
+        </div>
+        <div class="header-right">
+          <div class="badge">
+            Actualizado al: <span id="fecha-actual"></span>
+          </div>
+          <div class="header-info no-print">
+            <div class="chip chip-small">Listado general de muebles</div>
+            <div class="chip chip-small">Moneda: <strong>&nbsp;ARS</strong></div>
+            <button type="button" class="btn-pdf" id="btn-pdf" title="Abrir diálogo para imprimir o guardar como PDF">
+              Descargar / Imprimir PDF
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <!-- HERO -->
+      <section class="hero no-print">
+        <div>
+          <h1>Catálogo de comedores, living, jardín y dormitorio</h1>
+          <p>
+            Tablas con códigos, descripciones, costos y precios finales para cada
+            línea de muebles.
+          </p>
+          <p class="hero-note">
+            Usá el buscador para encontrar rápido cualquier producto por código
+            o por nombre.
+          </p>
+        </div>
+
+        <div class="hero-card">
+          <div class="hero-card-content">
+            <div class="hero-card-title">Resumen general</div>
+            <div class="hero-card-main">Todas las líneas en una sola vista</div>
+            <ul class="hero-mini-list">
+              <li><span class="hero-dot"></span> Ideal para enviar por PDF o WhatsApp.</li>
+              <li><span class="hero-dot"></span> Información tomada directamente de tu planilla.</li>
+              <li><span class="hero-dot"></span> Pensado para ver bien en escritorio y celular.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- FILTROS / BUSCADOR -->
+      <div class="filters">
+        <div class="filters-left">
+          <div class="filter-buttons">
+            <button type="button" class="filter-btn active" data-line="all">Todas las líneas</button>
+            <button type="button" class="filter-btn" data-line="Euro">Euro</button>
+            <button type="button" class="filter-btn" data-line="Baku">Baku</button>
+            <button type="button" class="filter-btn" data-line="Tradición">Tradición</button>
+            <button type="button" class="filter-btn" data-line="Murcia">Murcia</button>
+            <button type="button" class="filter-btn" data-line="Docta">Docta</button>
+            <button type="button" class="filter-btn" data-line="Jardín">Jardín</button>
+            <button type="button" class="filter-btn" data-line="Murano">Murano</button>
+            <button type="button" class="filter-btn" data-line="Living">Living</button>
+            <button type="button" class="filter-btn" data-line="Dormitorio">Dormitorio</button>
+            <button type="button" class="filter-btn" data-line="Respaldos">Respaldos</button>
+          </div>
+        </div>
+        <div class="search-chip">
+          <div class="search-icon"></div>
+          <span>Buscar:</span>
+          <input
+            id="search-input"
+            class="search-input"
+            type="text"
+            placeholder="Código o descripción (ej: Euro 120x120, 09-0101)..."
+          />
+        </div>
+      </div>
+
+      <!-- ========== LINEA COMEDOR EURO ========== -->
+      <section class="line-section" data-line="Euro">
+        <h2 class="section-title">
+          Línea Comedor Euro
+          <span>Mesas y sillas</span>
+        </h2>
+        <div class="table-wrapper">
+          <table class="tabla-precios">
+            <thead>
+              <tr>
+                <th>CÓDIGO</th>
+                <th>DESCRIPCIÓN</th>
+                <th>COSTO</th>
+                <th>PRECIO</th>
+                <th>+ 21% IVA</th>
+                <th>+ 35%</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>415003</td>
+                <td>Mesa Euro 120x120 (tapa madera)</td>
+                <td>$206.656,00</td>
+                <td>-</td>
+                <td>$250.053,76</td>
+                <td>$278.985,60</td>
+              </tr>
+              <tr>
+                <td>422001</td>
+                <td>Mesa Euro 160x85 (tapa madera)</td>
+                <td>$208.076,00</td>
+                <td>-</td>
+                <td>$251.771,96</td>
+                <td>$280.902,60</td>
+              </tr>
+              <tr>
+                <td>423001</td>
+                <td>Mesa Euro 180x85 (tapa madera)</td>
+                <td>$228.281,00</td>
+                <td>-</td>
+                <td>$276.873,41</td>
+                <td>$308.908,35</td>
+              </tr>
+              <tr>
+                <td>476001</td>
+                <td>Mesa Euro extensible 160-215-270</td>
+                <td>$423.787,00</td>
+                <td>-</td>
+                <td>$512.782,77</td>
+                <td>$572.112,44</td>
+              </tr>
+              <tr>
+                <td>465001</td>
+                <td>Dresuar Euro</td>
+                <td>$129.354,00</td>
+                <td>-</td>
+                <td>$156.518,34</td>
+                <td>$174.627,90</td>
+              </tr>
+              <tr>
+                <td>464001</td>
+                <td>Mesa ratona centro Euro 0,80x0,80</td>
+                <td>$151.403,00</td>
+                <td>-</td>
+                <td>$183.197,63</td>
+                <td>$204.394,90</td>
+              </tr>
+              <tr>
+                <td>426001</td>
+                <td>Silla Euro</td>
+                <td>$76.752,00</td>
+                <td>-</td>
+                <td>$92.869,92</td>
+                <td>$103.615,65</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ========== LINEA COMEDOR BAKU (CLARITO) ========== -->
+      <section class="line-section" data-line="Baku">
+        <h2 class="section-title">
+          Línea Comedor Baku (clarito)
+          <span>Combinado</span>
+        </h2>
+        <div class="table-wrapper">
+          <table class="tabla-precios">
+            <thead>
+              <tr>
+                <th>CÓDIGO</th>
+                <th>DESCRIPCIÓN</th>
+                <th>COSTO</th>
+                <th>PRECIO</th>
+                <th>+ 21% IVA</th>
+                <th>+ 35%</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>0534001</td>
+                <td>Silla Baku</td>
+                <td>$106.395,00</td>
+                <td>-</td>
+                <td>$128.737,95</td>
+                <td>$143.633,00</td>
+              </tr>
+              <tr>
+                <td>0533001</td>
+                <td>Mesa Baku 1,40 metros</td>
+                <td>$189.286,00</td>
+                <td>-</td>
+                <td>$229.035,00</td>
+                <td>$255.536,00</td>
+              </tr>
+              <tr>
+                <td>0535001</td>
+                <td>Vajillero Baku bajo (puerta vidrio) 1,27 largo</td>
+                <td>$287.117,00</td>
+                <td>-</td>
+                <td>$347.411,57</td>
+                <td>$387.607,95</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ========== LINEA COMEDOR TRADICION ========== -->
+      <section class="line-section" data-line="Tradición">
+        <h2 class="section-title">
+          Línea Comedor Tradición
+        </h2>
+        <div class="table-wrapper">
+          <table class="tabla-precios">
+            <thead>
+              <tr>
+                <th>CÓDIGO</th>
+                <th>DESCRIPCIÓN</th>
+                <th>COSTO</th>
+                <th>PRECIO</th>
+                <th>+ 21% IVA</th>
+                <th>+ 35%</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>0405002</td>
+                <td>Mesa redonda 120 metros (pata recta)</td>
+                <td>$226.561,00</td>
+                <td>-</td>
+                <td>$274.138,81</td>
+                <td>$305.857,35</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ========== LINEA SILLAS COMEDOR ========== -->
+      <section class="line-section" data-line="Murcia">
+        <h2 class="section-title">
+          Línea Sillas Comedor
+        </h2>
+        <div class="table-wrapper">
+          <table class="tabla-precios">
+            <thead>
+              <tr>
+                <th>CÓDIGO</th>
+                <th>DESCRIPCIÓN</th>
+                <th>COSTO</th>
+                <th>PRECIO</th>
+                <th>+ 21% IVA</th>
+                <th>+ 35%</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>0531001</td>
+                <td>Silla Murcia</td>
+                <td>$123.834,00</td>
+                <td>-</td>
+                <td>$149.839,14</td>
+                <td>$167.175,90</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ========== LINEA COMEDOR DOCTA ========== -->
+      <section class="line-section" data-line="Docta">
+        <h2 class="section-title">
+          Línea Comedor Docta
+          <span>Banquetas, sillas, mesa y vajillero (color caoba)</span>
+        </h2>
+        <div class="table-wrapper">
+          <table class="tabla-precios">
+            <thead>
+              <tr>
+                <th>CÓDIGO</th>
+                <th>DESCRIPCIÓN</th>
+                <th>COSTO</th>
+                <th>PRECIO</th>
+                <th>+ 21% IVA</th>
+                <th>+ 35%</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>511001</td>
+                <td>Banqueta Docta</td>
+                <td>$87.733,00</td>
+                <td>-</td>
+                <td>$106.156,93</td>
+                <td>$118.439,55</td>
+              </tr>
+              <tr>
+                <td>505001</td>
+                <td>Silla Docta</td>
+                <td>$81.417,00</td>
+                <td>-</td>
+                <td>$98.514,57</td>
+                <td>$109.912,95</td>
+              </tr>
+              <tr>
+                <td>024871</td>
+                <td>Mesa Docta 1,40 metros</td>
+                <td>$161.613,00</td>
+                <td>-</td>
+                <td>$195.551,73</td>
+                <td>$218.177,55</td>
+              </tr>
+              <tr>
+                <td>507001</td>
+                <td>Vajillero Docta 1,80 mts (puerta vidrio)</td>
+                <td>$391.394,00</td>
+                <td>-</td>
+                <td>$473.586,74</td>
+                <td>$528.381,90</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ========== LINEA JARDIN ========== -->
+      <section class="line-section" data-line="Jardín">
+        <h2 class="section-title">
+          Línea Jardín
+          <span>Mesas y sillas de aluminio</span>
+        </h2>
+        <div class="table-wrapper">
+          <table class="tabla-precios">
+            <thead>
+              <tr>
+                <th>CÓDIGO</th>
+                <th>DESCRIPCIÓN</th>
+                <th>COSTO</th>
+                <th>PRECIO</th>
+                <th>+ 21% IVA</th>
+                <th>+ 35%</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>09-0101</td>
+                <td>Mesa Boston ratona de 0,50 cm de diámetro</td>
+                <td>$66.999,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>09-0102</td>
+                <td>Mesa Boston de 1,00 mt redonda en aluminio</td>
+                <td>$204.592,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>09-0103</td>
+                <td>Silla Boston individual en aluminio</td>
+                <td>$100.000,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>09-0104</td>
+                <td>Sillón Boston doble en aluminio</td>
+                <td>$173.329,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>09-0110</td>
+                <td>Mesa Chateau redonda de 1,00 mt en aluminio</td>
+                <td>$225.593,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>09-0113</td>
+                <td>Mesa Chateau ovalada de 1,30 mt en aluminio</td>
+                <td>$269.895,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>09-0116</td>
+                <td>Mesa Chateau ovalada de 1,60 mt en aluminio</td>
+                <td>$362.192,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>09-0113B</td>
+                <td>Silla Chateau individual en aluminio</td>
+                <td>$98.977,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>09-0115</td>
+                <td>Sillón Chateau doble</td>
+                <td>$183.236,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>08-0116</td>
+                <td>Mesa Sutra ratona de 0,50 x 0,42 cm</td>
+                <td>$127.881,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>09-0120</td>
+                <td>Mesa Sutra ratona de 80 x 54 cm</td>
+                <td>$200.000,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>09-0121</td>
+                <td>Silla Sutra en aluminio</td>
+                <td>$121.586,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>09-0124</td>
+                <td>Sillón Sutra doble en aluminio</td>
+                <td>$207.577,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>09-0124B</td>
+                <td>Mesa Garden de 0,60 cm de aluminio</td>
+                <td>$115.119,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>09-0125</td>
+                <td>Silla Garden en aluminio</td>
+                <td>$98.002,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>09-0127</td>
+                <td>Mesa Merlin de 110 x 150 cm en aluminio</td>
+                <td>$325.000,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ========== LINEA COMEDOR MURANO ========== -->
+      <section class="line-section" data-line="Murano">
+        <h2 class="section-title">
+          Línea Comedor Murano
+          <span>Mesas y sillas</span>
+        </h2>
+        <div class="table-wrapper">
+          <table class="tabla-precios">
+            <thead>
+              <tr>
+                <th>CÓDIGO</th>
+                <th>DESCRIPCIÓN</th>
+                <th>COSTO</th>
+                <th>PRECIO</th>
+                <th>+ 21% IVA</th>
+                <th>+ 35%</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>522001</td>
+                <td>Mesa Murano 1,60 metros</td>
+                <td>$230.313,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>$278.678,73</td>
+              </tr>
+              <tr>
+                <td>526001</td>
+                <td>Silla Murano</td>
+                <td>$99.467,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>$120.355,07</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ========== LIVING (SILLONES) ========== -->
+      <section class="line-section" data-line="Living">
+        <h2 class="section-title">
+          Línea Living (sillones)
+          <span>Sillones y banquetas</span>
+        </h2>
+        <div class="table-wrapper">
+          <table class="tabla-precios">
+            <thead>
+              <tr>
+                <th>CÓDIGO</th>
+                <th>DESCRIPCIÓN</th>
+                <th>COSTO</th>
+                <th>PRECIO</th>
+                <th>+ 21% IVA</th>
+                <th>+ 35%</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>-</td>
+                <td>Sillón Oslo 1 cuerpo</td>
+                <td>$240.115,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>-</td>
+                <td>Sillón Oslo 2 cuerpos</td>
+                <td>$373.074,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>-</td>
+                <td>Sillón Shey</td>
+                <td>$183.000,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>-</td>
+                <td>Sillón Amadeus</td>
+                <td>$183.000,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>-</td>
+                <td>Sillón Nova</td>
+                <td>$180.000,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>-</td>
+                <td>Banqueta Martina</td>
+                <td>$153.000,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>0530001</td>
+                <td>Mesa ratona centro Docta</td>
+                <td>$155.303,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ========== DORMITORIO (MESAS DE LUZ) ========== -->
+      <section class="line-section" data-line="Dormitorio">
+        <h2 class="section-title">
+          Línea Dormitorio – Mesas de luz
+        </h2>
+        <div class="table-wrapper">
+          <table class="tabla-precios">
+            <thead>
+              <tr>
+                <th>CÓDIGO</th>
+                <th>DESCRIPCIÓN</th>
+                <th>COSTO</th>
+                <th>PRECIO</th>
+                <th>+ 21% IVA</th>
+                <th>+ 35%</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>452001</td>
+                <td>Mesa de luz Euro</td>
+                <td>$89.920,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>$108.803,20</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ========== DORMITORIO BAKU ========== -->
+      <section class="line-section" data-line="Dormitorio Baku">
+        <h2 class="section-title">
+          Línea Dormitorio Baku
+          <span>Cómoda y respaldos</span>
+        </h2>
+        <div class="table-wrapper">
+          <table class="tabla-precios">
+            <thead>
+              <tr>
+                <th>CÓDIGO</th>
+                <th>DESCRIPCIÓN</th>
+                <th>COSTO</th>
+                <th>PRECIO</th>
+                <th>+ 21% IVA</th>
+                <th>+ 35%</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>543001</td>
+                <td>Cómoda Baku</td>
+                <td>$294.854,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>$356.773,34</td>
+              </tr>
+              <tr>
+                <td>544002</td>
+                <td>Respaldo Baku 1,60 metros</td>
+                <td>$180.161,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>$217.994,81</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ========== RESPALDOS SIN CÓDIGO ========== -->
+      <section class="line-section" data-line="Respaldos">
+        <h2 class="section-title">
+          Respaldos de cama
+          <span>Modelos sin código</span>
+        </h2>
+        <div class="table-wrapper">
+          <table class="tabla-precios">
+            <thead>
+              <tr>
+                <th>CÓDIGO</th>
+                <th>DESCRIPCIÓN</th>
+                <th>COSTO</th>
+                <th>PRECIO</th>
+                <th>+ 21% IVA</th>
+                <th>+ 35%</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>-</td>
+                <td>Respaldo 1,40 metros</td>
+                <td>$131.500,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>-</td>
+                <td>Respaldo 1,60 metros (EN STOCK)</td>
+                <td>$147.600,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>-</td>
+                <td>Respaldo 1,80 metros</td>
+                <td>$166.000,00</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
