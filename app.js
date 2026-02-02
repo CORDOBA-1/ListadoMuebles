@@ -3,7 +3,7 @@
   document.getElementById("fecha-actual").textContent =
     new Date().toLocaleDateString("es-AR", opcionesFecha);
 
-  // +21% IVA = COSTO × 1.21 | +35% = COSTO × 1.35
+  // +21% IVA = COSTO × 1.21 | +35% = (columna +21% IVA) × 1.35
   function parsePrecio(texto) {
     const limpio = (texto || "").trim().replace(/\s/g, "").replace("$", "");
     if (!limpio || limpio === "-") return null;
@@ -42,14 +42,15 @@
     return decimal.length ? entero + "," + decimal : entero;
   }
 
-  /** Actualiza las columnas +21% y +35% de una fila a partir del COSTO (columna 3). */
+  /** Actualiza las columnas +21% y +35%: +21% = COSTO×1.21, +35% = (+21% IVA)×1.35. */
   function actualizarDesdeCosto(tr) {
     const celdas = tr.querySelectorAll("td");
     if (celdas.length < 6) return;
     const costo = parsePrecio(celdas[2].textContent);
     if (costo != null) {
-      celdas[4].textContent = formatearPrecio(costo * 1.21);
-      celdas[5].textContent = formatearPrecio(costo * 1.35);
+      const valor21 = costo * 1.21;
+      celdas[4].textContent = formatearPrecio(valor21);
+      celdas[5].textContent = formatearPrecio(valor21 * 1.35);
     } else {
       celdas[4].textContent = "-";
       celdas[5].textContent = "-";
