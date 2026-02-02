@@ -3,6 +3,35 @@ const opcionesFecha = { day: "2-digit", month: "2-digit", year: "numeric" };
 document.getElementById("fecha-actual").textContent =
   new Date().toLocaleDateString("es-AR", opcionesFecha);
 
+// Columna +35% = valor de +21% IVA más 35% (es decir, +21% × 1,35)
+function parsePrecio(texto) {
+  const limpio = (texto || "").trim().replace(/\s/g, "").replace("$", "");
+  if (!limpio || limpio === "-") return null;
+  const num = limpio.replace(/\./g, "").replace(",", ".");
+  const n = parseFloat(num);
+  return isNaN(n) ? null : n;
+}
+
+function formatearPrecio(num) {
+  if (num == null || isNaN(num)) return "-";
+  const entero = Math.floor(num);
+  const decimal = Math.round((num - entero) * 100);
+  const parteEntera = entero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  const parteDecimal = decimal.toString().padStart(2, "0");
+  return "$" + parteEntera + "," + parteDecimal;
+}
+
+function actualizarColumnaMas35() {
+  document.querySelectorAll("table.tabla-precios tbody tr").forEach((tr) => {
+    const celdas = tr.querySelectorAll("td");
+    if (celdas.length < 6) return;
+    const valor21 = parsePrecio(celdas[4].textContent);
+    celdas[5].textContent = valor21 != null ? formatearPrecio(valor21 * 1.35) : "-";
+  });
+}
+
+actualizarColumnaMas35();
+
 // Filtro de búsqueda por código / descripción (todas las tablas)
 const inputBusqueda = document.getElementById("search-input");
 
