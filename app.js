@@ -167,14 +167,23 @@
       .replace(/[\u0300-\u036f]/g, "");
   }
 
+  const lineSections = document.querySelectorAll(".line-section");
+
   function aplicarFiltro() {
     const term = normalizar(inputBusqueda.value.trim());
-
-    // Todas las filas de todas las tablas de precios
     const filas = document.querySelectorAll("table.tabla-precios tbody tr");
 
     if (!term) {
       filas.forEach((tr) => tr.classList.remove("hidden-row"));
+      // Restaurar visibilidad de secciones según el filtro de línea activo
+      const selectedLine = document.querySelector(".filter-btn.active")?.getAttribute("data-line") || "all";
+      lineSections.forEach((section) => {
+        const sectionLine = section.getAttribute("data-line") || "";
+        const show =
+          selectedLine === "all" ||
+          sectionLine.split(/\s+/).some((part) => part === selectedLine);
+        section.style.display = show ? "" : "none";
+      });
       return;
     }
 
@@ -190,6 +199,14 @@
         tr.classList.add("hidden-row");
       }
     });
+
+    // Ocultar secciones cuya tabla no tiene ninguna fila visible
+    lineSections.forEach((section) => {
+      const tabla = section.querySelector("table.tabla-precios");
+      if (!tabla) return;
+      const filasVisibles = tabla.querySelectorAll("tbody tr:not(.hidden-row)");
+      section.style.display = filasVisibles.length > 0 ? "" : "none";
+    });
   }
 
   inputBusqueda.addEventListener("input", aplicarFiltro);
@@ -201,7 +218,6 @@
 
   // Filtro por línea de muebles
   const filterButtons = document.querySelectorAll(".filter-btn");
-  const lineSections = document.querySelectorAll(".line-section");
 
   filterButtons.forEach((btn) => {
     btn.addEventListener("click", function () {
