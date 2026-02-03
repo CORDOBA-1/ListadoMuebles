@@ -1,3 +1,34 @@
+  // Tema claro/oscuro (guardado en localStorage)
+  const STORAGE_THEME = "muebles-euro-theme";
+  const html = document.documentElement;
+  const btnTheme = document.getElementById("btn-theme");
+
+  function aplicarTema(dark) {
+    if (dark) {
+      html.classList.remove("theme-light");
+      html.classList.add("theme-dark");
+      btnTheme.setAttribute("title", "Modo claro");
+      btnTheme.setAttribute("aria-label", "Activar modo claro");
+    } else {
+      html.classList.remove("theme-dark");
+      html.classList.add("theme-light");
+      btnTheme.setAttribute("title", "Modo oscuro");
+      btnTheme.setAttribute("aria-label", "Activar modo oscuro");
+    }
+    try { localStorage.setItem(STORAGE_THEME, dark ? "dark" : "light"); } catch (e) {}
+  }
+
+  try {
+    const saved = localStorage.getItem(STORAGE_THEME);
+    aplicarTema(saved === "dark");
+  } catch (e) {
+    aplicarTema(false);
+  }
+
+  btnTheme.addEventListener("click", function () {
+    aplicarTema(!html.classList.contains("theme-dark"));
+  });
+
   // Fecha actual en el encabezado
   const opcionesFecha = { day: "2-digit", month: "2-digit", year: "numeric" };
   document.getElementById("fecha-actual").textContent =
@@ -72,9 +103,88 @@
   const btnEditarPrecios = document.getElementById("btn-editar-precios");
   let editMode = false;
 
+  // Modal de contraseña (solo se guarda hash, no la clave en claro)
+  const modalEditar = document.getElementById("modal-editar");
+  const formModalEditar = document.getElementById("form-modal-editar");
+  const inputModalPassword = document.getElementById("modal-password");
+  const modalPasswordWrap = inputModalPassword.closest(".modal-password-wrap");
+  const modalPasswordToggle = document.getElementById("modal-password-toggle");
+  const modalError = document.getElementById("modal-editar-error");
+  const modalCancel = document.getElementById("modal-cancel");
+
+  modalPasswordToggle.addEventListener("click", function () {
+    const visible = inputModalPassword.type === "text";
+    if (visible) {
+      inputModalPassword.type = "password";
+      modalPasswordWrap.classList.remove("visible");
+      modalPasswordToggle.setAttribute("title", "Mostrar contraseña");
+      modalPasswordToggle.setAttribute("aria-label", "Mostrar contraseña");
+    } else {
+      inputModalPassword.type = "text";
+      modalPasswordWrap.classList.add("visible");
+      modalPasswordToggle.setAttribute("title", "Ocultar contraseña");
+      modalPasswordToggle.setAttribute("aria-label", "Ocultar contraseña");
+    }
+  });
+
+  function abrirModalEditar() {
+    inputModalPassword.value = "";
+    inputModalPassword.type = "password";
+    if (modalPasswordWrap) modalPasswordWrap.classList.remove("visible");
+    if (modalPasswordToggle) {
+      modalPasswordToggle.setAttribute("title", "Mostrar contraseña");
+      modalPasswordToggle.setAttribute("aria-label", "Mostrar contraseña");
+    }
+    modalError.textContent = "";
+    modalEditar.removeAttribute("hidden");
+    inputModalPassword.focus();
+  }
+
+  function cerrarModalEditar() {
+    modalEditar.setAttribute("hidden", "");
+    inputModalPassword.value = "";
+    modalError.textContent = "";
+  }
+
+  async function verificarYEntrar(clave) {
+    const enc = new TextEncoder();
+    const data = enc.encode(clave);
+    const buf = await crypto.subtle.digest("SHA-256", data);
+    const hex = Array.from(new Uint8Array(buf))
+      .map(function (b) { return b.toString(16).padStart(2, "0"); })
+      .join("");
+    return hex === "37058d3691ef37af32606164b2ea86fe75b1bbff54b0642e0b47e9b5735d2d9e";
+  }
+
   btnEditarPrecios.addEventListener("click", function () {
-    if (editMode) salirModoEdicion();
-    else entrarModoEdicion();
+    if (editMode) {
+      salirModoEdicion();
+      return;
+    }
+    abrirModalEditar();
+  });
+
+  formModalEditar.addEventListener("submit", function (e) {
+    e.preventDefault();
+    const clave = inputModalPassword.value;
+    modalError.textContent = "";
+    verificarYEntrar(clave).then(function (ok) {
+      if (ok) {
+        cerrarModalEditar();
+        entrarModoEdicion();
+      } else {
+        modalError.textContent = "Contraseña incorrecta.";
+        inputModalPassword.focus();
+      }
+    });
+  });
+
+  modalCancel.addEventListener("click", cerrarModalEditar);
+  modalEditar.addEventListener("click", function (e) {
+    if (e.target === modalEditar) cerrarModalEditar();
+  });
+  modalEditar.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") cerrarModalEditar();
   });
 
   function aplicarCostoDesdeInput(input) {
@@ -270,8 +380,13 @@
   document.addEventListener("click", function (e) {
     const td = e.target.closest("td[data-copyable]");
     if (!td || td.closest("td[data-costo-cell]")) return;
-    const texto = td.textContent.trim();
-    if (!texto || texto === "-") return;
+    const precio = td.textContent.trim();
+    if (!precio || precio === "-") return;
+    const tr = td.closest("tr");
+    if (!tr) return;
+    const celdas = tr.querySelectorAll("td");
+    const descripcion = (celdas[1]?.textContent || "").trim();
+    const texto = descripcion ? "" + descripcion + "= " + precio : precio;
     navigator.clipboard.writeText(texto).then(
       () => mostrarToast("Copiado"),
       () => {}
