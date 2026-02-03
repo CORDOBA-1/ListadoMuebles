@@ -518,8 +518,23 @@ td.costo-editable {
   outline: 1px dashed rgba(34, 197, 94, 0.4);
   outline-offset: -1px;
   cursor: text;
+  padding-left: 0.5rem;
 }
-td.costo-editable:focus {
+td.costo-editable .costo-prefix {
+  margin-right: 0.15rem;
+  user-select: none;
+}
+td.costo-editable .costo-input {
+  font: inherit;
+  font-size: 0.83rem;
+  text-align: right;
+  border: none;
+  background: transparent;
+  outline: none;
+  min-width: 5rem;
+  max-width: 100%;
+}
+td.costo-editable:focus-within {
   outline: 2px solid var(--accent);
   outline-offset: 0;
 }
