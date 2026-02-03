@@ -46,7 +46,11 @@
   function actualizarDesdeCosto(tr) {
     const celdas = tr.querySelectorAll("td");
     if (celdas.length < 6) return;
-    const costo = parsePrecio(celdas[2].textContent);
+    const costoCell = celdas[2];
+    const input = costoCell.querySelector("input.costo-input");
+    const costo = input
+      ? parsePrecio("$" + sanitizeCostoInput(input.value))
+      : parsePrecio(costoCell.textContent);
     if (costo != null) {
       const valor21 = costo * 1.21;
       celdas[4].textContent = formatearPrecio(valor21);
@@ -73,40 +77,36 @@
     else entrarModoEdicion();
   });
 
+  function aplicarCostoDesdeInput(input) {
+    const cell = input.closest("td");
+    const tr = input.closest("tr");
+    if (!cell || !tr) return;
+    const raw = (input.value || "").trim();
+    const costo = raw ? parsePrecio("$" + sanitizeCostoInput(raw)) : null;
+    cell.removeAttribute("data-costo-cell");
+    cell.classList.remove("costo-editable");
+    cell.innerHTML = "";
+    cell.textContent = costo != null ? formatearPrecio(costo) : "-";
+    cell.setAttribute("data-copyable", "1");
+    actualizarDesdeCosto(tr);
+  }
+
   document.addEventListener("blur", function (e) {
     if (!editMode) return;
-    const cell = e.target.closest("td[data-costo-cell]");
-    if (!cell) return;
-    const tr = cell.closest("tr");
-    if (!tr) return;
-    const costo = parsePrecio(cell.textContent);
-    if (costo != null) {
-      cell.textContent = formatearPrecio(costo);
-      actualizarDesdeCosto(tr);
-    } else {
-      actualizarDesdeCosto(tr);
-    }
-  }, true);
-
-  document.addEventListener("input", function (e) {
-    if (!editMode) return;
-    const cell = e.target.closest("td[data-costo-cell]");
-    if (!cell) return;
-    const sanitized = sanitizeCostoInput(cell.textContent);
-    cell.textContent = sanitized ? "$" + sanitized : "$";
-    actualizarDesdeCosto(cell.closest("tr"));
+    const input = e.target.closest("input.costo-input");
+    if (!input) return;
+    aplicarCostoDesdeInput(input);
   }, true);
 
   document.addEventListener("keydown", function (e) {
     if (!editMode) return;
-    const cell = e.target.closest("td[data-costo-cell]");
-    if (!cell) return;
+    const input = e.target.closest("input.costo-input");
+    if (!input) return;
     if (e.key === "Enter") {
       e.preventDefault();
-      cell.blur();
+      input.blur();
       return;
     }
-    // Solo permitir: dígitos, una coma, teclas de control
     const controlKeys = ["Backspace", "Delete", "Tab", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"];
     if (controlKeys.includes(e.key)) return;
     if (e.ctrlKey || e.metaKey) {
@@ -117,12 +117,35 @@
       return;
     }
     if (e.key === ",") {
-      if (cell.textContent.replace("$", "").includes(",")) e.preventDefault();
+      if (input.value.includes(",")) e.preventDefault();
       return;
     }
     if (!/^\d$/.test(e.key)) {
       e.preventDefault();
     }
+  }, true);
+
+  document.addEventListener("paste", function (e) {
+    if (!editMode) return;
+    const input = e.target.closest("input.costo-input");
+    if (!input) return;
+    e.preventDefault();
+    const pasted = (e.clipboardData?.getData("text/plain") || "").trim();
+    const sanitized = sanitizeCostoInput(pasted);
+    const start = input.selectionStart ?? input.value.length;
+    const end = input.selectionEnd ?? input.value.length;
+    const newVal = input.value.slice(0, start) + sanitized + input.value.slice(end);
+    const sanitizedNew = sanitizeCostoInput(newVal);
+    input.value = sanitizedNew;
+    input.setSelectionRange(sanitizedNew.length, sanitizedNew.length);
+    actualizarDesdeCosto(input.closest("tr"));
+  }, true);
+
+  document.addEventListener("input", function (e) {
+    if (!editMode) return;
+    const input = e.target.closest("input.costo-input");
+    if (!input) return;
+    actualizarDesdeCosto(input.closest("tr"));
   }, true);
 
   // Filtro de búsqueda por código / descripción (todas las tablas)
@@ -255,6 +278,13 @@
     );
   }, true);
 
+  function valorParaInput(costo) {
+    if (costo == null || isNaN(costo)) return "";
+    const entero = Math.floor(costo);
+    const decimal = Math.round((costo - entero) * 100);
+    return entero + "," + decimal.toString().padStart(2, "0");
+  }
+
   function entrarModoEdicion() {
     editMode = true;
     btnEditarPrecios.classList.add("active");
@@ -265,10 +295,21 @@
       const costoCell = celdas[2];
       costoCell.removeAttribute("data-copyable");
       const costo = parsePrecio(costoCell.textContent);
-      costoCell.textContent = formatearPrecioParaEdicion(costo);
-      costoCell.contentEditable = true;
+      const valorInput = valorParaInput(costo);
       costoCell.classList.add("costo-editable");
       costoCell.setAttribute("data-costo-cell", "1");
+      costoCell.innerHTML = "<span class=\"costo-prefix\">$</span><input type=\"text\" class=\"costo-input\" value=\"" + escapeHtml(valorInput) + "\" />";
+      const input = costoCell.querySelector("input.costo-input");
+      input.addEventListener("input", function () {
+        const sanitized = sanitizeCostoInput(input.value);
+        if (sanitized !== input.value) {
+          const pos = input.selectionStart ?? 0;
+          input.value = sanitized;
+          input.setSelectionRange(Math.min(pos, sanitized.length), Math.min(pos, sanitized.length));
+        }
+        actualizarDesdeCosto(tr);
+      });
+      actualizarDesdeCosto(tr);
     });
   }
 
@@ -276,16 +317,8 @@
     editMode = false;
     btnEditarPrecios.classList.remove("active");
     btnEditarPrecios.textContent = "Editar precios";
-    document.querySelectorAll("table.tabla-precios td[data-costo-cell]").forEach((cell) => {
-      cell.contentEditable = false;
-      cell.classList.remove("costo-editable");
-      cell.removeAttribute("data-costo-cell");
-      cell.setAttribute("data-copyable", "1");
-      const tr = cell.closest("tr");
-      if (tr) {
-        const costo = parsePrecio(cell.textContent);
-        if (costo != null) cell.textContent = formatearPrecio(costo);
-      }
+    document.querySelectorAll("input.costo-input").forEach((input) => {
+      aplicarCostoDesdeInput(input);
     });
   }
 
