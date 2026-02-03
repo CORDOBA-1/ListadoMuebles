@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="theme-light">
 <head>
   <meta charset="UTF-8" />
   <title>Muebles Euro - Listado de Precios</title>
@@ -20,6 +20,10 @@
             Actualizado al: <span id="fecha-actual"></span>
           </div>
           <div class="header-info no-print">
+            <button type="button" class="btn-theme no-print" id="btn-theme" title="Modo oscuro" aria-label="Activar modo oscuro">
+              <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+              <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
             <div class="chip chip-small">Listado general de muebles</div>
             <div class="chip chip-small">Moneda: <strong>&nbsp;ARS</strong></div>
             <button type="button" class="btn-edit no-print" id="btn-editar-precios" title="Activar edición de costos (21% y 35% se recalculan solos)">
@@ -47,6 +51,12 @@
           <p class="hero-note">
             Usá el buscador para encontrar rápido cualquier producto por código
             o por nombre.
+          </p>
+          <p class="hero-note">
+            Hacé clic en cualquier precio para copiar la descripción con el precio (ideal para WhatsApp).
+          </p>
+          <p class="hero-note">
+            Podés cambiar entre modo claro y oscuro con el ícono de sol/luna en el encabezado.
           </p>
         </div>
 
@@ -732,6 +742,29 @@
       </section>
     </div>
   </main>
+
+  <!-- Modal contraseña para editar precios -->
+  <div id="modal-editar" class="modal-overlay no-print" role="dialog" aria-labelledby="modal-editar-titulo" aria-modal="true" hidden>
+    <div class="modal-editar-box">
+      <h2 id="modal-editar-titulo" class="modal-editar-titulo">Editar precios</h2>
+      <p class="modal-editar-texto">Ingresá la contraseña para habilitar la edición.</p>
+      <form id="form-modal-editar" class="modal-editar-form">
+        <label for="modal-password" class="modal-editar-label">Contraseña</label>
+        <div class="modal-password-wrap">
+          <input type="password" id="modal-password" class="modal-editar-input" autocomplete="off" />
+          <button type="button" class="modal-password-toggle" id="modal-password-toggle" title="Mostrar contraseña" aria-label="Mostrar contraseña">
+            <svg class="icon-eye icon-eye-open" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg class="icon-eye icon-eye-closed" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </button>
+        </div>
+        <p id="modal-editar-error" class="modal-editar-error" role="alert" aria-live="polite"></p>
+        <div class="modal-editar-buttons">
+          <button type="button" class="modal-editar-btn modal-editar-btn-cancel" id="modal-cancel">Cancelar</button>
+          <button type="submit" class="modal-editar-btn modal-editar-btn-ok">Entrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>
