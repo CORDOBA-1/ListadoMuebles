@@ -68,38 +68,6 @@
   const btnEditarPrecios = document.getElementById("btn-editar-precios");
   let editMode = false;
 
-  function entrarModoEdicion() {
-    editMode = true;
-    btnEditarPrecios.classList.add("active");
-    btnEditarPrecios.textContent = "Salir de edición";
-    document.querySelectorAll("table.tabla-precios tbody tr").forEach((tr) => {
-      const celdas = tr.querySelectorAll("td");
-      if (celdas.length < 6) return;
-      const costoCell = celdas[2];
-      const costo = parsePrecio(costoCell.textContent);
-      costoCell.textContent = formatearPrecioParaEdicion(costo);
-      costoCell.contentEditable = true;
-      costoCell.classList.add("costo-editable");
-      costoCell.setAttribute("data-costo-cell", "1");
-    });
-  }
-
-  function salirModoEdicion() {
-    editMode = false;
-    btnEditarPrecios.classList.remove("active");
-    btnEditarPrecios.textContent = "Editar precios";
-    document.querySelectorAll("table.tabla-precios td[data-costo-cell]").forEach((cell) => {
-      cell.contentEditable = false;
-      cell.classList.remove("costo-editable");
-      cell.removeAttribute("data-costo-cell");
-      const tr = cell.closest("tr");
-      if (tr) {
-        const costo = parsePrecio(cell.textContent);
-        if (costo != null) cell.textContent = formatearPrecio(costo);
-      }
-    });
-  }
-
   btnEditarPrecios.addEventListener("click", function () {
     if (editMode) salirModoEdicion();
     else entrarModoEdicion();
@@ -161,21 +129,55 @@
   const inputBusqueda = document.getElementById("search-input");
 
   function normalizar(texto) {
-    return texto
+    return (texto || "")
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
   }
 
+  function escapeHtml(str) {
+    const s = String(str || "");
+    return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  /** Resalta el término de búsqueda en el texto (para código y descripción). */
+  function resaltarTexto(texto, term) {
+    if (!term || !texto) return escapeHtml(texto);
+    const nTerm = normalizar(term);
+    const nTexto = normalizar(texto);
+    let resultado = "";
+    let lastIndex = 0;
+    let pos;
+    while ((pos = nTexto.indexOf(nTerm, lastIndex)) !== -1) {
+      const fin = pos + nTerm.length;
+      resultado += escapeHtml(texto.slice(lastIndex, pos)) +
+        "<mark>" + escapeHtml(texto.slice(pos, fin)) + "</mark>";
+      lastIndex = fin;
+    }
+    resultado += escapeHtml(texto.slice(lastIndex));
+    return resultado;
+  }
+
   const lineSections = document.querySelectorAll(".line-section");
+  const searchResultCount = document.getElementById("search-result-count");
+  const noResultsMsg = document.getElementById("no-results-msg");
+
+  function quitarResaltadoFilas() {
+    document.querySelectorAll("table.tabla-precios tbody tr").forEach((tr) => {
+      const celdas = tr.querySelectorAll("td");
+      if (celdas[0]) celdas[0].textContent = celdas[0].textContent;
+      if (celdas[1]) celdas[1].textContent = celdas[1].textContent;
+    });
+  }
 
   function aplicarFiltro() {
-    const term = normalizar(inputBusqueda.value.trim());
+    const termRaw = inputBusqueda.value.trim();
+    const term = normalizar(termRaw);
     const filas = document.querySelectorAll("table.tabla-precios tbody tr");
 
     if (!term) {
+      quitarResaltadoFilas();
       filas.forEach((tr) => tr.classList.remove("hidden-row"));
-      // Restaurar visibilidad de secciones según el filtro de línea activo
       const selectedLine = document.querySelector(".filter-btn.active")?.getAttribute("data-line") || "all";
       lineSections.forEach((section) => {
         const sectionLine = section.getAttribute("data-line") || "";
@@ -184,9 +186,12 @@
           sectionLine.split(/\s+/).some((part) => part === selectedLine);
         section.style.display = show ? "" : "none";
       });
+      searchResultCount.textContent = "";
+      noResultsMsg.style.display = "none";
       return;
     }
 
+    quitarResaltadoFilas();
     filas.forEach((tr) => {
       const celdas = tr.querySelectorAll("td");
       const codigo = celdas[0]?.textContent || "";
@@ -195,21 +200,94 @@
 
       if (texto.includes(term)) {
         tr.classList.remove("hidden-row");
+        celdas[0].innerHTML = resaltarTexto(codigo, termRaw);
+        celdas[1].innerHTML = resaltarTexto(descripcion, termRaw);
       } else {
         tr.classList.add("hidden-row");
       }
     });
 
-    // Ocultar secciones cuya tabla no tiene ninguna fila visible
     lineSections.forEach((section) => {
       const tabla = section.querySelector("table.tabla-precios");
       if (!tabla) return;
       const filasVisibles = tabla.querySelectorAll("tbody tr:not(.hidden-row)");
       section.style.display = filasVisibles.length > 0 ? "" : "none";
     });
+
+    const totalVisible = document.querySelectorAll("table.tabla-precios tbody tr:not(.hidden-row)").length;
+    if (totalVisible === 0) {
+      searchResultCount.textContent = "";
+      noResultsMsg.style.display = "block";
+    } else {
+      searchResultCount.textContent = totalVisible === 1 ? "1 resultado" : totalVisible + " resultados";
+      noResultsMsg.style.display = "none";
+    }
   }
 
   inputBusqueda.addEventListener("input", aplicarFiltro);
+
+  // Copiar precio al hacer clic (para consultas rápidas por WhatsApp, etc.)
+  function mostrarToast(mensaje) {
+    const existente = document.getElementById("toast-copiado");
+    if (existente) existente.remove();
+    const toast = document.createElement("div");
+    toast.id = "toast-copiado";
+    toast.className = "toast-copiado";
+    toast.textContent = mensaje;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 1500);
+  }
+
+  document.querySelectorAll("table.tabla-precios tbody tr").forEach((tr) => {
+    const celdas = tr.querySelectorAll("td");
+    if (celdas.length < 6) return;
+    [celdas[2], celdas[3], celdas[4], celdas[5]].forEach((td) => td.setAttribute("data-copyable", "1"));
+  });
+
+  document.addEventListener("click", function (e) {
+    const td = e.target.closest("td[data-copyable]");
+    if (!td || td.closest("td[data-costo-cell]")) return;
+    const texto = td.textContent.trim();
+    if (!texto || texto === "-") return;
+    navigator.clipboard.writeText(texto).then(
+      () => mostrarToast("Copiado"),
+      () => {}
+    );
+  }, true);
+
+  function entrarModoEdicion() {
+    editMode = true;
+    btnEditarPrecios.classList.add("active");
+    btnEditarPrecios.textContent = "Salir de edición";
+    document.querySelectorAll("table.tabla-precios tbody tr").forEach((tr) => {
+      const celdas = tr.querySelectorAll("td");
+      if (celdas.length < 6) return;
+      const costoCell = celdas[2];
+      costoCell.removeAttribute("data-copyable");
+      const costo = parsePrecio(costoCell.textContent);
+      costoCell.textContent = formatearPrecioParaEdicion(costo);
+      costoCell.contentEditable = true;
+      costoCell.classList.add("costo-editable");
+      costoCell.setAttribute("data-costo-cell", "1");
+    });
+  }
+
+  function salirModoEdicion() {
+    editMode = false;
+    btnEditarPrecios.classList.remove("active");
+    btnEditarPrecios.textContent = "Editar precios";
+    document.querySelectorAll("table.tabla-precios td[data-costo-cell]").forEach((cell) => {
+      cell.contentEditable = false;
+      cell.classList.remove("costo-editable");
+      cell.removeAttribute("data-costo-cell");
+      cell.setAttribute("data-copyable", "1");
+      const tr = cell.closest("tr");
+      if (tr) {
+        const costo = parsePrecio(cell.textContent);
+        if (costo != null) cell.textContent = formatearPrecio(costo);
+      }
+    });
+  }
 
   // Botón PDF: abre el diálogo de impresión (ahí se puede elegir "Guardar como PDF")
   document.getElementById("btn-pdf").addEventListener("click", function () {
